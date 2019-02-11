@@ -9,4 +9,4 @@ steps:
   - apt-get update
   - pwd
   - ls -ltra
-  - cp test test1
+  - cp README.md README.md1
