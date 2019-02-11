@@ -1,5 +1,5 @@
 module "eks" {
-  source = "../shared/terraform/modules/eks"
+  source = "../../shared/terraform/modules/eks"
   project = "${var.project}"
   environment = "${var.environment}"
   api-access = "${var.api-access}"
@@ -10,7 +10,7 @@ module "eks" {
 }
 
 module "nodes" {
-  source = "../shared/terraform/modules/eks-nodes"
+  source = "../../shared/terraform/modules/eks-nodes"
   eks-endpoint = "${module.eks.eks-endpoint}"
   eks-cluster-ca = "${module.eks.eks-cluster-ca}"
   eks-name = "${module.eks.eks-name}"
@@ -27,7 +27,7 @@ module "nodes" {
 }
 
 module "nodes-micro" {
-  source = "../shared/terraform/modules/eks-nodes"
+  source = "../../shared/terraform/modules/eks-nodes"
   eks-endpoint = "${module.eks.eks-endpoint}"
   eks-cluster-ca = "${module.eks.eks-cluster-ca}"
   eks-name = "${module.eks.eks-name}"
@@ -44,7 +44,7 @@ module "nodes-micro" {
 }
 
 module "nodes-eks-components" {
-  source = "../shared/terraform/modules/eks-nodes"
+  source = "../../shared/terraform/modules/eks-nodes"
   eks-endpoint = "${module.eks.eks-endpoint}"
   eks-cluster-ca = "${module.eks.eks-cluster-ca}"
   eks-name = "${module.eks.eks-name}"
