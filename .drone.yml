@@ -24,7 +24,7 @@ steps:
 
 - name: plan
   image: jmccann/drone-terraform:1
-  working_dir: eks/terraform/
+  working_dir: /drone/src/eks/terraform/
   commands:
   - ls -ltra
   - pwd
