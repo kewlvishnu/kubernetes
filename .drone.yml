@@ -29,4 +29,4 @@ steps:
     PASSWORD:
       from_secret: password
   working_dir: /drone/src/eks/terraform/
-  plan: true
+  plan: false
