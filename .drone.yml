@@ -17,6 +17,10 @@ steps:
   - pwd
   - ls -ltra
   - cp README.md README.md1
+  - ls -ltra
+  - cp eks/terraform/preprod/* eks/terraform/.
+  - ls -ltra
+  - ls -ltrs eks/terraform/
 
 - name: plan
   image: jmccann/drone-terraform:1
