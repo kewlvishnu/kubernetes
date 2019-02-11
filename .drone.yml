@@ -24,13 +24,13 @@ steps:
 
 - name: plan
   image: jmccann/drone-terraform:1
-  working_dir: /drone/src/eks/terraform/
-  commands:
-  - ls -ltra
-  - pwd
-  - printenv
   environment:
+    working_dir: /drone/src/eks/terraform/
     BLABLA: linux
     PASSWORD:
       from_secret: password
     plan: true
+    commands:
+    - ls -ltra
+    - pwd
+    - printenv
