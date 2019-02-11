@@ -1,0 +1,12 @@
+- userarn: arn:aws:iam::319087885992:user/jenkins-user
+  username: jenkins
+  groups:
+    - system:masters
+- userarn: arn:aws:iam::319087885992:user/vkorde
+  username: vkorde
+  groups:
+    - system:masters
+- userarn: arn:aws:iam::319087885992:user/rawsonb
+  username: rawsonb
+  groups:
+    - system:masters

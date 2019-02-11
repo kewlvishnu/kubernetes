@@ -1,0 +1,30 @@
+node('linux-new') {
+  stage('Clean Workspace'){
+    deleteDir()
+  }
+  withCredentials([usernamePassword(credentialsId: 'Jenkins-Monotype-Github', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
+    sh "#!/bin/bash \n curl --user ${GITHUB_USER}:${GITHUB_TOKEN} 'https://raw.githubusercontent.com/Monotype/devops-general/develop/projects/devops/jenkins/CIHelpers/src/com/monotype/cihelpers/Helpers.groovy' > Helpers.groovy"
+  }
+  def Helpers = load("Helpers.groovy")
+
+  stage('Code Checkout') {
+    checkout scm
+  }
+  wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
+    stage('Build AMI') {
+      dir('projects/eks/influx-chronograf/packer') {
+        sh """
+          packer build packer.json
+            
+          echo -n "AMI-ID=" >> ../ami.properties
+          cat properties.json | grep -o 'ami-[0-9a-z]*' >> ../ami.properties
+          cat ../ami.properties
+        """
+      }
+    }
+  }
+  stage('Archive AMI ID') {
+    // Archive the build output artifacts.
+    archiveArtifacts artifacts: 'projects/eks/influx-chronograf/ami.properties', excludes: ''
+  }
+}

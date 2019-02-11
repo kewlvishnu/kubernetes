@@ -1,0 +1,46 @@
+node('linux-k8s') {
+  stage('Run the queries for namespaces'){
+    // Putting empty array sends you everything ('email@monotype.com': [])
+    def emails = [
+      'vishnu.korde@monotype.com': [ [], ['das', 'foundry'] ],
+      //'rahul.bist@monotype.com': [ [], ['das', 'foundry'] ],
+    ]
+
+    def from_time_arg = ""
+    if (from_time != "") {
+      from_time_arg = "--from \"" + from_time + "\""
+    }
+    def to_time_arg = ""
+    if (to_time != "") {
+      to_time_arg = "--to \"" + to_time + "\""
+    }
+    
+    emails.each { email, namespaceLists -> 
+      for (namespaces in namespaceLists) {
+        def ns_flags = ""
+        for (ns in namespaces) {
+          ns_flags += "--namespace \"" + ns + "\" "
+        }
+        def body = "Check the attached CSV file for more information.\n\n"
+        body += sh(returnStdout: true, script: "docker run --rm docker-artifact.monotype.com/shared/price-estimation-query-tool:1.4.2 --email ${from_time_arg} ${to_time_arg} ${ns_flags} https://metrics.monotype-kubernetes-pp.com")
+        sh "docker run --rm docker-artifact.monotype.com/shared/price-estimation-query-tool:1.4.2 --csv ${from_time_arg} ${to_time_arg} ${ns_flags} https://metrics.monotype-kubernetes-pp.com > pricing.csv"
+
+        if (from_time == "") {
+          from_time = "30d"
+        }
+        if (to_time == "") {
+          to_time = "now"
+        }
+        def subject = "Kubernetes Price Estimates (from: ${from_time} to: ${to_time}) ("
+        for (ns in namespaces) {
+          subject += ns + " "
+        }
+        if (subject[-1] == "(") {
+          subject += "All "
+        }
+        subject = subject[0..-2] + ")"
+        emailext attachmentsPattern: "pricing.csv", body: body, subject: subject, to: "${email}"
+      }
+    }
+  }
+}

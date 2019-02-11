@@ -1,0 +1,16 @@
+node('linux-test') {
+  withCredentials([usernamePassword(credentialsId: 'Jenkins-Monotype-Github', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
+    sh "#!/bin/bash \n curl --no-sessionid --user ${GITHUB_USER}:${GITHUB_TOKEN} 'https://raw.githubusercontent.com/Monotype/devops-general/develop/shared/jenkins-helpers/docker_helper/docker_helper.groovy' > docker_helper.groovy"
+  }
+  def docker_helper = load("docker_helper.groovy")
+
+  stage('Checkout devops-general'){
+    checkout(scm)
+  }
+
+  dir('projects/kubernetes/price-estimation-query-tool') {
+    stage('Build the Docker Image'){
+      docker_helper.build()
+    }
+  }
+}

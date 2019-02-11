@@ -1,0 +1,45 @@
+{
+    "variables": {
+      "access_key": "{{env `ACCESS_KEY`}}",
+      "secret_key": "{{env `SECRET_KEY`}}",
+      "ansible_roles_path": "../../../shared/ansible/roles:../ansible/roles"
+    },
+  
+    "builders": [{
+      "type": "amazon-ebs",
+      "access_key": "{{ user `AWS_ACCESS_KEY_ID`}}",
+      "secret_key": "{{ user `AWS_SECRET_ACCESS_KEY`}}",
+      "ami_description": "Bastion Host AMI with ScaleFT",
+      "ami_name": "Bastion AMI {{ timestamp }}",
+      "associate_public_ip_address": true,
+      "communicator": "ssh",
+      "instance_type": "t2.micro",
+      "region": "us-east-1",
+      "security_group_id": "sg-0abfb3d01963b5574",
+      "subnet_id": "subnet-07f9c05351972cd9d",
+      "ssh_private_ip": false,
+      "ssh_pty": "true",
+      "ssh_username": "ubuntu",
+      "source_ami": "ami-0f9cf087c1f27d9b1",
+      "tags": {
+        "Name": "Bastion AMI",
+        "OS": "Ubuntu 16.04"
+      }
+    }],
+  
+    "provisioners": [{
+      "type": "ansible",
+      "playbook_file": "../ansible/bastion.yml",
+      "user": "ubuntu",
+      "ansible_env_vars": [ "ANSIBLE_ROLES_PATH={{user `ansible_roles_path` }}" ]
+      }
+    ],
+  
+      "post-processors": [{
+        "type": "manifest",
+        "output": "properties.json",
+        "strip_path": true
+      }
+    ]
+  }
+  

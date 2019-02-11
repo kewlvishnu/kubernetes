@@ -1,0 +1,15 @@
+---
+- hosts: all
+  user: ubuntu
+  become: yes
+  gather_facts: no
+  vars:
+    sft_enrollment_token: "eyJzIjoiOGE4ZWNmMTUtZjljYi00ZmRmLTk2YTctM2Y2YWM3MmIwNmM1IiwidSI6Imh0dHBzOi8vYXBwLnNjYWxlZnQuY29tIn0="
+    sftd_config:
+      - 'CanonicalName: Bastion-Host'
+      - 'AltNames: ["Bastion", "eks-bastion", "bastion", "bastion-host"]'
+    startup_config:
+      append_hostname: true
+  roles:
+    - { role: base_apt, tags: base_apt }
+    - { role: scaleft, tags: scaleft }

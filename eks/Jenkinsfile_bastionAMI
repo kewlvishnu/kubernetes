@@ -1,0 +1,42 @@
+node('linux-new') {
+  stage('Clean Workspace'){
+    deleteDir()
+  }
+  withCredentials([usernamePassword(credentialsId: 'Jenkins-Monotype-Github', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
+    sh "#!/bin/bash \n curl --user ${GITHUB_USER}:${GITHUB_TOKEN} 'https://raw.githubusercontent.com/Monotype/devops-general/develop/projects/devops/jenkins/CIHelpers/src/com/monotype/cihelpers/Helpers.groovy' > Helpers.groovy"
+  }
+  def Helpers = load("Helpers.groovy")
+
+  stage('Code Checkout') {
+    checkout scm
+  }
+
+  String envCredentialsId = ""
+  if(env.environment == "preprod") {
+    envCredentialsId = "kubernetes-pp"
+  }
+  if(env.environment == "prod") {
+    envCredentialsId = "" // TODO: fill this in
+  }
+  wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
+    stage('Build AMI') {
+      dir('projects/eks/packer') {
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: envCredentialsId, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+          sh """
+            export AWS_DEFAULT_REGION="us-east-1"
+
+            packer build bastion.json
+
+            echo -n "AMI-ID=" >> ../ami.properties
+            cat properties.json | grep -o 'ami-[0-9a-z]*' >> ../ami.properties
+            cat ../ami.properties
+          """
+        }
+      }
+    }
+  }
+  stage('Archive AMI ID') {
+    // Archive the build output artifacts.
+    archiveArtifacts artifacts: 'projects/eks/ami.properties', excludes: ''
+  }
+}

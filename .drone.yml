@@ -2,6 +2,13 @@ kind: pipeline
 name: default
 
 steps:
+- name: publish
+  image: golang
+  environment:
+    GOOS: linux
+    PASSWORD:
+      from_secret: password
+
 - name: message
   image: ubuntu
   commands:
@@ -10,3 +17,11 @@ steps:
   - pwd
   - ls -ltra
   - cp README.md README.md1
+
+- name: plan
+  image: jmccann/drone-terraform:1
+  environment:
+    BLABLA: linux
+    PASSWORD:
+      from_secret: password
+    plan: true

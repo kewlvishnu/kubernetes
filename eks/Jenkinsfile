@@ -1,0 +1,109 @@
+node('linux-k8s') {
+  withCredentials([usernamePassword(credentialsId: 'Jenkins-Monotype-Github', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
+    sh "#!/bin/bash \n curl --no-sessionid --user ${GITHUB_USER}:${GITHUB_TOKEN} 'https://raw.githubusercontent.com/Monotype/devops-general/develop/projects/devops/jenkins/CIHelpers/src/com/monotype/cihelpers/Helpers.groovy' > Helpers.groovy"
+  }
+  def Helpers = load("Helpers.groovy")
+
+  stage('Clean workspace before build') {
+    deleteDir()
+  }
+
+  stage('Code checkout') {
+    checkout scm
+  }
+  
+  stage('Setup cluster'){
+    String envCredentialsId = ""
+    String fluxValuesFile = ""
+    if(env.environment == "preprod") {
+      envCredentialsId = "kubernetes-pp"
+      fluxValuesFile = "../flux/values-preprod.yaml"
+    }
+    if(env.environment == "prod") {
+      envCredentialsId = "kubernetes-prod"
+      fluxValuesFile = "../flux/values-prod.yaml"
+    }
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: envCredentialsId, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+      dir('projects/eks/terraform'){
+          sh """
+          terraform version
+          export AWS_DEFAULT_REGION=us-east-1
+          cp $environment/* .
+          terraform init
+          terraform plan -out kubernetes.tfplan -input=false
+          """
+          boolean shouldApply = Helpers.PromptUserWithBooleanValue(
+                "Please review the kubernetes.tfplan terraform plan.",
+                "Should the plan be applied?",
+                false,
+                60
+            )
+          if(shouldApply) {
+            sh """
+              set +x
+              export AWS_DEFAULT_REGION=us-east-1
+              terraform apply kubernetes.tfplan
+            """
+
+            // Get creds file
+            sh """
+              terraform output kubeconfig > kubeconfig
+              chmod 0600 kubeconfig
+            """
+
+            // Add users to config map
+            // Single quotes for environment vars
+            sh '''
+              export AWS_DEFAULT_REGION=us-east-1
+              export KUBECONFIG="./kubeconfig"
+
+              terraform output config-map-aws-auth > config.yml
+              printf "\n" >> users.yml
+              printf "  mapUsers: |\n" >> config.yml
+              while IFS="\n" read -r line;
+                do printf "    %s\n" "$line" >> config.yml;
+              done < users.yml
+              kubectl apply -f config.yml
+            '''
+
+            // Setup helm
+            sh '''
+              export AWS_DEFAULT_REGION=us-east-1
+              export KUBECONFIG="./kubeconfig"
+              kubectl apply -f ../tiller/serviceaccount.yml
+              helm init --service-account tiller --node-selectors=dedicated=eks-components --wait \
+                --override spec.template.spec.tolerations[0].key="node.kubernetes.io/unschedulable" \
+                --override spec.template.spec.tolerations[0].operator="Equal" \
+                --override spec.template.spec.tolerations[0].value="true" \
+                --override spec.template.spec.tolerations[0].effect="NoSchedule"
+            '''
+
+            // Install flux
+            sh """
+              export AWS_DEFAULT_REGION=us-east-1
+              export KUBECONFIG="./kubeconfig"
+
+              helm repo add weaveworks https://weaveworks.github.io/flux
+              
+              if ! helm status flux; then
+                helm install --wait --name flux \
+                  --namespace devops \
+                  -f ${fluxValuesFile} \
+                  weaveworks/flux
+              fi
+            """
+
+            // rm configs
+            sh """
+              rm kubeconfig
+              rm config.yml
+            """
+          } else {
+            // mark build result
+            currentBuild.result = 'ABORTED'
+          }
+        }
+      
+    }
+  }
+}

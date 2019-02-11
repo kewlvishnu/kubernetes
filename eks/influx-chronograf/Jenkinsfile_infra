@@ -1,0 +1,52 @@
+node('linux-k8s') {
+  withCredentials([usernamePassword(credentialsId: 'Jenkins-Monotype-Github', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
+    sh "#!/bin/bash \n curl --no-sessionid --user ${GITHUB_USER}:${GITHUB_TOKEN} 'https://raw.githubusercontent.com/Monotype/devops-general/develop/projects/devops/jenkins/CIHelpers/src/com/monotype/cihelpers/Helpers.groovy' > Helpers.groovy"
+  }
+  def Helpers = load("Helpers.groovy")
+
+  stage('Clean workspace before build') {
+    deleteDir()
+  }
+
+  stage('Code checkout') {
+    checkout scm
+  }
+  
+  stage('Setup cluster'){
+    String envCredentialsId = ""
+    if(env.environment == "preprod") {
+      envCredentialsId = "kubernetes-pp"
+    }
+    if(env.environment == "prod") {
+      envCredentialsId = "kubernetes-prod"
+    }
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: envCredentialsId, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+      dir('projects/eks/influx-chronograf/terraform'){
+          sh """
+          terraform version
+          export AWS_DEFAULT_REGION=us-east-1
+          cp $environment/* .
+          terraform init
+          terraform plan -out tick.tfplan -input=false
+          """
+          boolean shouldApply = Helpers.PromptUserWithBooleanValue(
+                "Please review the tick.tfplan terraform plan.",
+                "Should the plan be applied?",
+                false,
+                60
+            )
+          if(shouldApply) {
+            sh """
+              set +x
+              export AWS_DEFAULT_REGION=us-east-1
+              terraform apply tick.tfplan
+            """
+          } else {
+            // mark build result
+            currentBuild.result = 'ABORTED'
+          }
+        }
+      
+    }
+  }
+}

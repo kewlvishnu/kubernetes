@@ -1,0 +1,17 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  gather_facts: false
+  become: yes
+  vars:
+    - influx_efs_dns_name_preprod: "fs-ae46ee4f.efs.us-east-1.amazonaws.com"
+    - influx_efs_dns_name_prod: "fs-409420a1.efs.us-east-1.amazonaws.com"
+    - influx_folder: "/var/lib/influxdb"
+    - chronograf_efs_dns_name_preprod: "fs-af46ee4e.efs.us-east-1.amazonaws.com"
+    - chronograf_efs_dns_name_prod: "fs-419420a0.efs.us-east-1.amazonaws.com"
+    - chronograf_folder: "/var/lib/chronograf"
+  roles:
+    - base_apt
+    - mount_efs
+    - influx_db
+    - chronograf

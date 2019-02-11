@@ -1,0 +1,4 @@
+- userarn: arn:aws:iam::840432117366:user/kubernetes-prod
+  username: jenkins
+  groups:
+    - system:masters

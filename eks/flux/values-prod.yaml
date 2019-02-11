@@ -1,0 +1,34 @@
+helmOperator:
+  create: true
+  tolerations:
+  - key: "node.kubernetes.io/unschedulable"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+  nodeSelector:
+    dedicated: eks-components
+git:
+  url: ssh://git@github.com/Monotype/devops-kubernetes
+  branch: flux-state
+  path: prod/projects
+  secretName: flux-git-deploy
+  label: flux-sync-prod
+additionalArgs:
+- "--connect=ws://fluxcloud"
+
+tolerations:
+- key: "node.kubernetes.io/unschedulable"
+  operator: "Equal"
+  value: "true"
+  effect: "NoSchedule"
+nodeSelector:
+  dedicated: eks-components
+
+memcached:
+  tolerations:
+  - key: "node.kubernetes.io/unschedulable"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+  nodeSelector:
+    dedicated: eks-components
