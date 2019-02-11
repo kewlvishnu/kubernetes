@@ -1,0 +1,12 @@
+kind: pipeline
+name: default
+
+steps:
+- name: message
+  image: ubuntu
+  commands:
+  - echo "hello world"
+  - apt-get update
+  - pwd
+  - ls -ltra
+  - cp test test1
