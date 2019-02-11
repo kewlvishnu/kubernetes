@@ -25,6 +25,9 @@ steps:
 - name: plan
   image: jmccann/drone-terraform:1
   working_dir: eks/terraform/
+  commands:
+  - ls -ltra
+  - pwd
   environment:
     BLABLA: linux
     PASSWORD:
