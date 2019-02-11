@@ -30,7 +30,3 @@ steps:
     PASSWORD:
       from_secret: password
     plan: true
-  commands:
-  - ls -ltra
-  - pwd
-  - printenv
