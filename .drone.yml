@@ -11,6 +11,10 @@ steps:
 
 - name: message
   image: ubuntu
+  environment:
+    BLABLA: linux
+    PASSWORD:
+      from_secret: password
   commands:
   - echo "hello world"
   - apt-get update
@@ -21,12 +25,11 @@ steps:
   - cp eks/terraform/preprod/* eks/terraform/.
   - ls -ltra
   - ls -ltrs eks/terraform/
+  - cd eks/terraform/
+  - pwd
+  - printenv
 
 - name: plan
   image: jmccann/drone-terraform:1
-  environment:
-    BLABLA: linux
-    PASSWORD:
-      from_secret: password
   working_dir: /drone/src/eks/terraform/
   plan: false
