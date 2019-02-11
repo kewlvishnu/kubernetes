@@ -25,8 +25,8 @@ steps:
 - name: plan
   image: jmccann/drone-terraform:1
   environment:
-    working_dir: /drone/src/eks/terraform/
     BLABLA: linux
     PASSWORD:
       from_secret: password
-    plan: true
+  working_dir: /drone/src/eks/terraform/
+  plan: true
