@@ -34,3 +34,5 @@ steps:
   - cd eks/terraform/
   - pwd
   - printenv
+  - terraform init
+  - terraform plan
