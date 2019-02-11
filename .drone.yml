@@ -28,6 +28,7 @@ steps:
   commands:
   - ls -ltra
   - pwd
+  - printenv
   environment:
     BLABLA: linux
     PASSWORD:
