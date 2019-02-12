@@ -40,4 +40,5 @@ steps:
   - pwd
   - printenv
   - terraform init
-  - terraform plan
+  - terraform plan -out kubernetes.tfplan -input=false
+  - terraform apply kubernetes.tfplan
