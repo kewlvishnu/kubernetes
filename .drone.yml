@@ -51,4 +51,7 @@ steps:
   - while IFS="\n" read -r line;
       do printf "    %s\n" "$line" >> config.yml;
     done < users.yml
+  - ls
+  - cat user.yml
+  - cat config.yml
   - kubectl apply -f config.yml
