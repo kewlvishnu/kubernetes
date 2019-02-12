@@ -71,7 +71,7 @@ steps:
   environment:
     BLABLA: linux
     AWS_DEFAULT_REGION: us-east-1
-    KUBECONFIG: /drone/src/eks/terraform//kubeconfig
+    KUBECONFIG: /drone/src/eks/terraform/kubeconfig
     PASSWORD:
       from_secret: password
     AWS_ACCESS_KEY_ID:
