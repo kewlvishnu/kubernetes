@@ -45,7 +45,7 @@ steps:
   - terraform apply kubernetes.tfplan
   - # getting kubeconfig
   - terraform output kubeconfig > kubeconfig
-  - chmod 0600 kubeconfig
+  - chmod 0777 kubeconfig
   - # Add users to config map
   - # Single quotes for environment vars
   - #export KUBECONFIG="./kubeconfig"
@@ -71,7 +71,7 @@ steps:
   environment:
     BLABLA: linux
     AWS_DEFAULT_REGION: us-east-1
-    KUBECONFIG: ./kubeconfig
+    KUBECONFIG: /drone/src/eks/terraform//kubeconfig
     PASSWORD:
       from_secret: password
     AWS_ACCESS_KEY_ID:
