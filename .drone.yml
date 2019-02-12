@@ -54,7 +54,8 @@ steps:
   - ls
   - cat users.yml
   - cat config.yml
-  - apt-get install -y gnupg2 gnupg gnupg1 
+  - apt-get install -y gnupg2 gnupg gnupg1
+  - apt-get install -y apt-transport-https curl
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod u+x kubectl
   - mv kubectl /usr/local/bin/kubectl
