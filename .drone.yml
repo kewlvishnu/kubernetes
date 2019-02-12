@@ -54,4 +54,5 @@ steps:
   - ls
   - cat users.yml
   - cat config.yml
+  - apt-get install -y kubectl
   - kubectl apply -f config.yml
