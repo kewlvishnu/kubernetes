@@ -47,7 +47,7 @@ steps:
   - export KUBECONFIG="./kubeconfig"
   - terraform output config-map-aws-auth > config.yml
   - printf "\n" >> users.yml
-  - printf "  mapUsers:/ |\n" >> config.yml
+  - printf "  mapUsers:"" | \n" >> config.yml
   - while IFS="\n" read -r line;
       do printf "    %s\n" "$line" >> config.yml;
     done < users.yml
