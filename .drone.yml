@@ -15,6 +15,10 @@ steps:
     BLABLA: linux
     PASSWORD:
       from_secret: password
+    AWS_ACCESS_KEY_ID:
+      from_secret: AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: AWS_SECRET_ACCESS_KEY     
   commands:
   - apt-get update
   - apt-get install unzip
