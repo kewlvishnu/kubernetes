@@ -63,10 +63,10 @@ steps:
   - wget https://storage.googleapis.com/kubernetes-release/release/v1.8.6/bin/linux/amd64/kubectl
   - chmod u+x kubectl
   - mv kubectl /usr/local/bin/kubectl
-  - kubectl version
-  - kubectl apply -f config.yml
+  - #kubectl version
+  - #kubectl apply -f config.yml
 
-- name: message
+- name: kubectl
   image: wernight/kubectl
   environment:
     BLABLA: linux
@@ -79,5 +79,6 @@ steps:
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY     
   commands:
+  - cd eks/terraform/
   - kubectl version
   
