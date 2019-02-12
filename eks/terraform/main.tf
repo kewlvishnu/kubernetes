@@ -65,7 +65,7 @@ resource "aws_instance" "bastion-host" {
   subnet_id = "${aws_subnet.eks-public-subnets.*.id[0]}"
   vpc_security_group_ids = ["${module.eks.node-security-groups}"]
   instance_type = "t2.micro"
-  ami = "ami-06b215d201ed27fe3"
+  ami = "ami-0f9cf087c1f27d9b1"
   key_name = "${var.ssh-key-name}"
   associate_public_ip_address = true
 

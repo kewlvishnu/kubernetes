@@ -1,7 +1,7 @@
 project = "k8"
 environment = "pp"
 
-ssh-key-name = "eks-k8-pp"
+ssh-key-name = "devops-dev"
 
 api-access = [
     "192.5.106.0/24", # Woburn Office CIDR
