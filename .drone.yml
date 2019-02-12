@@ -13,6 +13,7 @@ steps:
   image: ubuntu
   environment:
     BLABLA: linux
+    AWS_DEFAULT_REGION: us-east-1
     PASSWORD:
       from_secret: password
     AWS_ACCESS_KEY_ID:
