@@ -54,6 +54,7 @@ steps:
   - ls
   - cat users.yml
   - cat config.yml
+  - apt-get install gnupg2 gnupg gnupg1 
   - apt-get update && apt-get install -y apt-transport-https curl
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - apt-get update
   - apt-get update
