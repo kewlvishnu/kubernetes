@@ -42,6 +42,9 @@ steps:
   - terraform init
   - terraform plan -out kubernetes.tfplan -input=false
   - terraform apply kubernetes.tfplan
+  - # getting kubeconfig
+  - terraform output kubeconfig > kubeconfig
+  - chmod 0600 kubeconfig
   - # Add users to config map
   - # Single quotes for environment vars
   - export KUBECONFIG="./kubeconfig"
