@@ -56,7 +56,8 @@ steps:
   - cat config.yml
   - apt-get install -y gnupg2 gnupg gnupg1 
   - apt-get update && apt-get install -y apt-transport-https curl
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  - wget https://packages.cloud.google.com/apt/doc/apt-key.gpg
   - apt-get update
   - apt-get install -y kubelet kubeadm kubectl
   - kubectl apply -f config.yml
