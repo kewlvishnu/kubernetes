@@ -80,6 +80,8 @@ steps:
   commands:
   - cd eks/terraform/
   - which kubectl
-  - kubectl version
+  - #kubectl version
   - ls -ltra
+  - cat config.yml
+  - cat kubeconfig
   
