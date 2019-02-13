@@ -84,4 +84,5 @@ steps:
   - ls -ltra
   - cat config.yml
   - cat kubeconfig
+  - kubectl apply -f config.yml
   
