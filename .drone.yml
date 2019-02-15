@@ -46,6 +46,8 @@ steps:
   - # getting kubeconfig
   - terraform output kubeconfig > kubeconfig
   - chmod 0777 kubeconfig
+  - #https://docs.docker.com/install/linux/docker-ce/ubuntu/
+  - apt-get install -y software-properties-common
   - # Add users to config map
   - # Single quotes for environment vars
   - terraform output config-map-aws-auth > config.yml
@@ -83,6 +85,7 @@ steps:
   - #kubectl version
   - ls -ltra
   - cat config.yml
+  - pwd
   - cat kubeconfig
-  - kubectl apply -f config.yml
+  - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
   
