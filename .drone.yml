@@ -80,7 +80,7 @@ steps:
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY     
   commands:
-  - apk update
+  - sudo apk update
   - apk add
   - apt-get update 
   - apt-get install python3-pip
