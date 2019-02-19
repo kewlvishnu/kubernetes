@@ -86,6 +86,6 @@ steps:
   - ls -ltra
   - cat config.yml
   - pwd
-  - cat kubeconfig
+  - cat /drone/src/eks/terraform/kubeconfig
   - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
   
