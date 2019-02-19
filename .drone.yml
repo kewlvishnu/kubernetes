@@ -15,6 +15,7 @@ steps:
     BLABLA: linux
     AWS_DEFAULT_REGION: us-east-1
     KUBECONFIG: /drone/src/eks/terraform/kubeconfig
+    fluxValuesFile: /drone/src/eks/flux/values-preprod.yaml
     PASSWORD:
       from_secret: password
     AWS_ACCESS_KEY_ID:
@@ -89,3 +90,4 @@ steps:
   - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
   - kubectl apply -f ../tiller/serviceaccount.yml
   - helm init --service-account tiller --node-selectors=dedicated=eks-components --wait --override spec.template.spec.tolerations[0].key="node.kubernetes.io/unschedulable" --override spec.template.spec.tolerations[0].operator="Equal" --override spec.template.spec.tolerations[0].value="true" --override spec.template.spec.tolerations[0].effect="NoSchedule"
+  - /bin/bash ../flux/flux.sh
