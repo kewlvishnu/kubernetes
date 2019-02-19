@@ -68,7 +68,7 @@ steps:
   - apt-get install -y python3-pip
   - pip3 install openshift
   - #kubectl apply -f config.yml
-  - curl -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
+  - curl -o /usr/drone/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
   - aws-iam-authenticator help
   - ls -ltra
   - ls /usr/local/bin/*
