@@ -66,6 +66,18 @@ steps:
   - mv kubectl /usr/local/bin/kubectl
   - #kubectl version
   - #kubectl apply -f config.yml
+  - curl -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
+  - ls -ltra
+  - ls /usr/local/bin/*
+  - cd eks/terraform/
+  - which kubectl
+  - #kubectl version
+  - ls -ltra
+  - cat config.yml
+  - printenv
+  - pwd
+  - cat /drone/src/eks/terraform/kubeconfig
+  - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
 
 - name: kubectl
   image: wernight/kubectl
