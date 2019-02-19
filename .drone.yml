@@ -85,6 +85,7 @@ steps:
   - #kubectl version
   - ls -ltra
   - cat config.yml
+  - printenv
   - pwd
   - cat /drone/src/eks/terraform/kubeconfig
   - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
