@@ -29,6 +29,11 @@ steps:
   - unzip terraform_0.11.10_linux_amd64.zip
   - mv terraform /usr/local/bin/
   - terraform --version 
+  - wget https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz
+  - tar -zxvf helm-v2.11.0-linux-amd64.tar.gz
+  - ls -ltra
+  - mv helm-v2.11.0-linux-amd64/helm /usr/local/bin/helm
+  - helm help
   - echo "hello world"
   - pwd
   - ls -ltra
@@ -82,35 +87,9 @@ steps:
   - pwd
   - cat /drone/src/eks/terraform/kubeconfig
   - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
-
-- name: kubectl
-  image: wernight/kubectl
-  environment:
-    BLABLA: linux
-    AWS_DEFAULT_REGION: us-east-1
-    KUBECONFIG: /drone/src/eks/terraform/kubeconfig
-    PASSWORD:
-      from_secret: password
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY     
-  commands:
-  - #sudo apk update
-  - #apk add
-  - #apt-get update 
-  - #apt-get install python3-pip
-  - #pip3 install openshift
-  - curl -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
-  - ls -ltra
-  - ls /usr/local/bin/*
-  - cd eks/terraform/
-  - which kubectl
-  - #kubectl version
-  - ls -ltra
-  - cat config.yml
-  - printenv
-  - pwd
-  - cat /drone/src/eks/terraform/kubeconfig
-  - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
-  
+  - kubectl apply -f ../tiller/serviceaccount.yml
+  - helm init --service-account tiller --node-selectors=dedicated=eks-components --wait \
+      --override spec.template.spec.tolerations[0].key="node.kubernetes.io/unschedulable" \
+      --override spec.template.spec.tolerations[0].operator="Equal" \
+      --override spec.template.spec.tolerations[0].value="true" \
+      --override spec.template.spec.tolerations[0].effect="NoSchedule"
