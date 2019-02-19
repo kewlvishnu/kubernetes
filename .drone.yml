@@ -80,11 +80,11 @@ steps:
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY     
   commands:
-  - sudo apk update
-  - apk add
-  - apt-get update 
-  - apt-get install python3-pip
-  - pip3 install openshift
+  - #sudo apk update
+  - #apk add
+  - #apt-get update 
+  - #apt-get install python3-pip
+  - #pip3 install openshift
   - curl -o https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
   - ls -ltra
   - cp ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
