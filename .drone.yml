@@ -65,7 +65,9 @@ steps:
   - chmod u+x kubectl
   - mv kubectl /usr/local/bin/kubectl
   - #kubectl version
-  - kubectl apply -f config.yml
+  - apt-get install python3-pip
+  - pip3 install openshift
+  - #kubectl apply -f config.yml
   - curl -o /usr/local/bin/aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
   - ls -ltra
   - ls /usr/local/bin/*
