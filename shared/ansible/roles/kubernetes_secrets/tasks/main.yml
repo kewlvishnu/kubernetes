@@ -1,0 +1,27 @@
+---
+- name: Base64 encode all secrets
+  set_fact:
+    secretsb64encoded: |
+      {%- set b64data = {} -%}
+      {%- for key, val in item.data.items() -%}
+        {%- set x=b64data.__setitem__(key, val|b64encode) -%}
+      {%- endfor %}
+      {{ secretsb64encoded|default([]) + [ {'data': b64data, 'metadata': item.metadata} ] }}
+  no_log: true # Don't log secret values
+  with_items:
+    - "{{ secrets }}"
+
+# *** Ansible >= 2.6
+- name: Apply all secrets on the cluster
+  k8s:
+    kubeconfig: "{{ kubeconfig }}"
+    state: present
+    force: yes
+    definition:s
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      metadata: "{{ item.metadata }}"
+      data: "{{ item.data }}"
+  no_log: true  # Don't log secret values
+  with_items: "{{ secretsb64encoded }}"

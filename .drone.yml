@@ -21,7 +21,9 @@ steps:
     AWS_ACCESS_KEY_ID:
       from_secret: AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY     
+      from_secret: AWS_SECRET_ACCESS_KEY    
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: FLUX_VAULT_PASSWORD 
   commands:
   - apt-get update
   - apt-get install unzip
@@ -57,6 +59,8 @@ steps:
   - apt-add-repository --yes --update ppa:ansible/ansible
   - apt-get install -y ansible
   - ansible --version
+  - echo "${FLUX_VAULT_PASSWORD}" > vault-password
+  - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
   - # Add users to config map
   - # Single quotes for environment vars
   - terraform output config-map-aws-auth > config.yml
