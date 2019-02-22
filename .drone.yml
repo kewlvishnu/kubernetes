@@ -22,7 +22,7 @@ steps:
       from_secret: AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY:
       from_secret: AWS_SECRET_ACCESS_KEY    
-    AWS_SECRET_ACCESS_KEY:
+    FLUX_VAULT_PASSWORD:
       from_secret: FLUX_VAULT_PASSWORD 
   commands:
   - apt-get update
