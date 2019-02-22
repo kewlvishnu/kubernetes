@@ -60,7 +60,7 @@ steps:
   - apt-get install -y python3-pip python3-dev
   - pip3 install ansible==2.7.0
   - #apt-get install -y ansible
-  - #ansible --version
+  - ansible --version
   - echo $FLUX_VAULT_PASSWORD > vault-password
   - cat vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
