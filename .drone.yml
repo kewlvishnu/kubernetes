@@ -55,8 +55,8 @@ steps:
   - #https://docs.docker.com/install/linux/docker-ce/ubuntu/
   - apt-get install -y software-properties-common
   - apt-add-repository --yes --update ppa:ansible/ansible
+  - apt-get install ansibles
   - ansible --version
-  - apt-get install ansible
   - # Add users to config map
   - # Single quotes for environment vars
   - terraform output config-map-aws-auth > config.yml
