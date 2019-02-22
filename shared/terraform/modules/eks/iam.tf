@@ -67,3 +67,7 @@ resource "aws_iam_instance_profile" "eks-node-role" {
   name = "eks-${var.project}-${var.environment}-node-role"
   role = "${aws_iam_role.eks-node-role.name}"
 }
+
+output "eks-node-role" {
+  value = "eks-${var.project}-${var.environment}-node-role"
+}

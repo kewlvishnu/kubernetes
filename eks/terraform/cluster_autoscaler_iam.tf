@@ -1,5 +1,5 @@
 data "aws_iam_role" "node-role" {
-  name = "eks-k8-pp-node-role"
+  name = "${module.eks.eks-node-role}"
 }
 
 module "cluster-autoscaler-role" {
