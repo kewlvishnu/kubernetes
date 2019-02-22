@@ -7,7 +7,7 @@
         {%- set x=b64data.__setitem__(key, val|b64encode) -%}
       {%- endfor %}
       {{ secretsb64encoded|default([]) + [ {'data': b64data, 'metadata': item.metadata} ] }}
-  no_log: true # Don't log secret values
+  no_log: false # Don't log secret values
   with_items:
     - "{{ secrets }}"
 
@@ -23,5 +23,5 @@
       type: Opaque
       metadata: "{{ item.metadata }}"
       data: "{{ item.data }}"
-  no_log: true  # Don't log secret values
+  no_log: false  # Don't log secret values
   with_items: "{{ secretsb64encoded }}"
