@@ -60,6 +60,7 @@ steps:
   - apt-get install -y ansible
   - ansible --version
   - echo "${FLUX_VAULT_PASSWORD}" > vault-password
+  - cat vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
   - # Add users to config map
   - # Single quotes for environment vars
