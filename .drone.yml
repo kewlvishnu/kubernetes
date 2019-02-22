@@ -57,8 +57,10 @@ steps:
   - #https://docs.docker.com/install/linux/docker-ce/ubuntu/
   - apt-get install -y software-properties-common
   - apt-add-repository --yes --update ppa:ansible/ansible
-  - apt-get install -y ansible
-  - ansible --version
+  - apt-get install -y python3-pip python3-dev
+  - pip3 install ansible==2.7.0
+  - #apt-get install -y ansible
+  - #ansible --version
   - echo $FLUX_VAULT_PASSWORD > vault-password
   - cat vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
@@ -79,7 +81,6 @@ steps:
   - chmod u+x kubectl
   - mv kubectl /usr/local/bin/kubectl
   - #kubectl version
-  - apt-get install -y python3-pip
   - pip3 install openshift
   - #kubectl apply -f config.yml
   - curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
