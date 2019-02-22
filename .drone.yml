@@ -16,6 +16,7 @@ steps:
     AWS_DEFAULT_REGION: us-east-1
     KUBECONFIG: /drone/src/eks/terraform/kubeconfig
     fluxValuesFile: /drone/src/eks/flux/values-preprod.yaml
+    ANSIBLE_CONFIG: /drone/src/eks/secrets/devops/flux/ansible.cfg
     PASSWORD:
       from_secret: password
     AWS_ACCESS_KEY_ID:
