@@ -63,20 +63,6 @@ steps:
   - pip3 install openshift
   - #apt-get install -y ansible
   - ansible --version
-  - echo $FLUX_VAULT_PASSWORD > vault-password
-  - cat vault-password
-  - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
-  - # Add users to config map
-  - # Single quotes for environment vars
-  - terraform output config-map-aws-auth > config.yml
-  - printf "\n" >> users.yml
-  - printf "  mapUsers:"" | \n" >> config.yml
-  - while IFS="\n" read -r line;
-      do printf "    %s\n" "$line" >> config.yml;
-    done < users.yml
-  - ls
-  - cat users.yml
-  - cat config.yml
   - #apt-get install -y gnupg2 gnupg gnupg1
   - apt-get install -y apt-transport-https curl
   - wget https://storage.googleapis.com/kubernetes-release/release/v1.12.3/bin/linux/amd64/kubectl
@@ -91,6 +77,20 @@ steps:
   - ls -ltra
   - ls /usr/local/bin/*
   - which kubectl
+  - echo $FLUX_VAULT_PASSWORD > vault-password
+  - cat vault-password
+  - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
+  - # Add users to config map
+  - # Single quotes for environment vars
+  - terraform output config-map-aws-auth > config.yml
+  - printf "\n" >> users.yml
+  - printf "  mapUsers:"" | \n" >> config.yml
+  - while IFS="\n" read -r line;
+      do printf "    %s\n" "$line" >> config.yml;
+    done < users.yml
+  - ls
+  - cat users.yml
+  - cat config.yml
   - #kubectl version
   - ls -ltra
   - cat config.yml
