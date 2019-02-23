@@ -100,3 +100,7 @@ output "private-subnet-ids" {
 output "vpc-id" {
   value = "${aws_vpc.eks-vpc.id}"
 }
+
+output "node-role-arn" {
+  value = "${module.eks.arn}"
+}
