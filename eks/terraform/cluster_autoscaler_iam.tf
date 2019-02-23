@@ -5,7 +5,7 @@ data "aws_iam_role" "node-role" {
 module "cluster-autoscaler-role" {
     source = "../../shared/terraform/modules/kube-iam-role"
     name = "eks-cluster-autoscaler-role"
-    eks-node-role-arn = "${data.aws_iam_role.node-role.arn}"
+    eks-node-role-arn = "${module.eks.node-role-arn}"
 }
 
 resource "aws_iam_policy" "autoscaling-policy" {
@@ -38,6 +38,6 @@ resource "aws_iam_role_policy_attachment" "cluster-autoscaler-role-autoscaling-p
   role       = "${module.cluster-autoscaler-role.name}"
 }
 
-output "role-arn" {
+output "node-role-arn" {
   value = "${module.cluster-autoscaler-role.arn}"
 }
