@@ -37,3 +37,7 @@ resource "aws_iam_role_policy_attachment" "cluster-autoscaler-role-autoscaling-p
   policy_arn = "${aws_iam_policy.autoscaling-policy.arn}"
   role       = "${module.cluster-autoscaler-role.name}"
 }
+
+output "node-role-arn" {
+  value = "${aws_iam_role.eks-node-role.arn}"
+}
