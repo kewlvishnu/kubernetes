@@ -105,6 +105,6 @@ output "node-role-arn" {
   value = "${module.eks.node-role-arn}"
 }
 
-output "node-role-arn" {
+output "eks-node-role" {
   value = "${module.eks.eks-node-role}"
 }
