@@ -102,5 +102,5 @@ output "vpc-id" {
 }
 
 output "node-role-arn" {
-  value = "${module.eks.arn}"
+  value = "${module.eks.node-role-arn}"
 }
