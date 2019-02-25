@@ -83,6 +83,7 @@ steps:
   - echo $KIAM_VAULT_PASSWORD > kiam-vault-password
   - cat vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
+  - ansible-playbook /drone/src/eks/secrets/devops/fluxcloud/site.yml --vault-password-file=vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/kiam/site.yml --vault-password-file=kiam-vault-password
   - # Add users to config map
   - # Single quotes for environment vars
