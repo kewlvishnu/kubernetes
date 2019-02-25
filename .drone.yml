@@ -104,5 +104,5 @@ steps:
   - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
   - kubectl apply -f ../tiller/serviceaccount.yml
   - helm init --service-account tiller --node-selectors=dedicated=eks-components --wait --override spec.template.spec.tolerations[0].key="node.kubernetes.io/unschedulable" --override spec.template.spec.tolerations[0].operator="Equal" --override spec.template.spec.tolerations[0].value="true" --override spec.template.spec.tolerations[0].effect="NoSchedule"
-  - helm install ../kiam -f ../kiam/values.yaml --name kiam --kubeconfig /drone/src/eks/terraform/kubeconfig --namespace devops
+  - /bin/bash ../kiam/kaim.sh
   - /bin/bash ../flux/flux.sh
