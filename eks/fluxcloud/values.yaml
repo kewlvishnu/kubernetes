@@ -1,0 +1,39 @@
+# Default values for fluxcloud.
+
+image:
+  repository: justinbarrick/fluxcloud
+  tag: "v0.3.0"
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+
+
+exporterType: "slack"
+slack:
+  URLSecretName:
+  URLSecretKey:
+  channel:
+  username: ""
+  iconEmoji: ""
+  githubURL: ""
+webhook:
+  URL: 
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

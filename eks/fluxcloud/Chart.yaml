@@ -1,0 +1,6 @@
+apiVersion: v1
+appVersion: "1.0"
+description: An event slurper to send slack notifications on flux events
+icon: https://static.thenounproject.com/png/1288459-200.png
+name: fluxcloud
+version: 0.2.3

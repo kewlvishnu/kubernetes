@@ -1,0 +1,65 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "fluxcloud.fullname" . }}
+  labels:
+    app: {{ template "fluxcloud.name" . }}
+    chart: {{ template "fluxcloud.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "fluxcloud.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fluxcloud.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: LISTEN_ADDRESS
+            value: ":3032"
+          {{- if eq .Values.exporterType "slack" }}
+          - name: SLACK_URL
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.slack.URLSecretName }}"
+                key: "{{ .Values.slack.URLSecretKey }}"
+          - name: SLACK_CHANNEL
+            value: "{{ .Values.slack.channel }}"
+            # Or configure multiple channels
+            # (comma separated <channel>=<namespace>) string:
+            #  value: "#kubernetes=*,#team=team"
+            {{- if .Values.slack.username }}
+          - name: SLACK_USERNAME
+            value: "{{ .Values.slack.username }}"
+            {{- end }}
+            {{- if .Values.slack.iconEmoji }}
+          - name: SLACK_ICON_EMOJI
+            value: "{{ .Values.slack.iconEmoji }}"
+            {{- end }}
+            {{- if .Values.slack.githubURL }}
+          - name: GITHUB_URL
+            value: "{{ .Values.slack.githubURL }}"
+            {{- end }}
+          {{- else if eq .Values.exporterType "webhook" }}
+          - name: WEBHOOK_URL
+            value: "{{ .Values.webhook.URL }}"
+          {{- end }}
+          ports:
+            - containerPort: 3032
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
