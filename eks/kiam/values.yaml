@@ -1,0 +1,117 @@
+# Default values for kiam.
+
+replicaCount: 1
+
+image:
+  repository: quay.io/uswitch/kiam
+  tag: v3-release
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+## SSL ca-certificates. Needed so kiam can make https calls to AWS
+sslCertsVolume: "/etc/pki/ca-trust/extracted/pem/"
+
+rbac: 
+  create: true
+
+agent:
+  args:
+    ## host settings
+    ##
+    host:
+      iptables: false
+      port: 8181
+      interface: "!en0"
+    ## log settings
+    ##
+    log:
+      jsonOutput: true
+      level: info
+    ## Prometheus metrics
+    ##
+    prometheus:
+      scrape: false
+      port: 9620
+      syncInterval: 5s
+    ## Timeout when creating the kiam gateway
+    ##
+    gatewayTimeoutCreation: 1s
+    extraArgs: {}
+
+  ## TLS settings
+  ## Must specify tlsSecretName, tlsCertNames are the filenames
+  tlsSecretName:
+  tlsCertNames:
+    cert: agent.pem
+    key: agent-key.pem
+    ca: ca.pem
+
+  updateStrategy: OnDelete
+  extraEnv: {}
+
+  podAnnotations: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+server:
+  args:
+    ## log settings
+    ##
+    log:
+      jsonOutput: true
+      level: info
+    ## Prometheus metrics
+    ##
+    prometheus:
+      scrape: false
+      port: 9620
+      syncInterval: 5s
+    ## Base ARN for IAM roles
+    ## If not specified use EC2 metadata service to detect ARN prefix
+    ##
+    roleBaseArn: null
+    ## Pod cache settings
+    ##
+    cache:
+      syncInterval: 1m
+    ## IAM role for the server to assume
+    ##
+    assumeRoleArn: null
+    ## Session duration for STS tokens
+    ##
+    sessionDuration: 15m
+    ## Timeout when creating the kiam gateway
+    ##
+    gatewayTimeoutCreation: 1s
+    extraArgs: {}
+
+  ## TLS settings
+  ## Must specify tlsSecretName, tlsCertNames are the filenames
+  tlsSecretName:
+  tlsCertNames:
+    cert: server.pem
+    key: server-key.pem
+    ca: ca.pem
+  
+  ## Server probe configuration
+  probes:
+    serverAddress: 127.0.0.1
+  
+  ## Service settings
+  service:
+    port: 443
+    targetPort: 443
+
+  
+  updateStrategy: OnDelete
+  extraEnv: {}
+
+  podAnnotations: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

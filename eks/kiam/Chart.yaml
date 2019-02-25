@@ -1,0 +1,6 @@
+apiVersion: v1
+appVersion: "1.0"
+description: kiam - IAM roles for kubernetes
+icon: https://cdn-images-1.medium.com/max/1600/1*uzQpIDtV4Ct8BbZKyv1FOQ.png
+name: kiam
+version: 0.14.1

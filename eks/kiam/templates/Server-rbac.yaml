@@ -1,0 +1,66 @@
+{{- if .Values.rbac.create }}
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ include "kiam.fullname" . }}-server
+  labels:
+    app: {{ include "kiam.name" . }}
+    chart: {{ include "kiam.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: server
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ include "kiam.fullname" . }}-read
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - pods
+  verbs:
+  - watch
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "kiam.fullname" . }}-read
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "kiam.fullname" . }}-read
+subjects:
+- kind: ServiceAccount
+  name: {{ include "kiam.fullname" . }}-server
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ include "kiam.fullname" . }}-write
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "kiam.fullname" . }}-write
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "kiam.fullname" . }}-write
+subjects:
+- kind: ServiceAccount
+  name: {{ include "kiam.fullname" . }}-server
+  namespace: {{ .Release.Namespace }}
+{{- end }}

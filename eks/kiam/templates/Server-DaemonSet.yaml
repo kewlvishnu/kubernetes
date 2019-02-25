@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "kiam.fullname" . }}-server
+  labels:
+    app: {{ include "kiam.name" . }}
+    chart: {{ include "kiam.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: server
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "kiam.name" . }}
+      release: {{ .Release.Name }}
+      component: server
+  template:
+    metadata:
+      annotations:
+{{ toYaml .Values.server.podAnnotations | indent 8 }}
+      labels:
+        app: {{ include "kiam.name" . }}
+        release: {{ .Release.Name }}
+        component: server
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- if .Values.rbac.create }}
+      serviceAccountName: kiam-server
+      {{- end }}
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: {{ .Values.sslCertsVolume }}
+        - name: tls
+          secret:
+            secretName: {{ .Values.server.tlsSecretName }}
+      containers:
+        - name: "{{ .Chart.Name }}-server"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /kiam
+            - server
+          args:
+            {{- if .Values.server.args.log.jsonOutput }}
+            - --json-log
+            {{- end }}
+            - --level={{ .Values.server.args.log.level }}
+            - --bind=0.0.0.0:{{ .Values.server.service.targetPort }}
+            - --cert=/etc/kiam/tls/{{ .Values.server.tlsCertNames.cert }}
+            - --key=/etc/kiam/tls/{{ .Values.server.tlsCertNames.key }}
+            - --ca=/etc/kiam/tls/{{ .Values.server.tlsCertNames.ca }}
+            - --session-duration={{ .Values.server.args.sessionDuration }}
+            - --sync={{ .Values.server.args.cache.syncInterval }}
+            {{- if .Values.server.roleBaseArn }}
+            - --role-base-arn={{ .Values.server.args.roleBaseArn }}
+            {{- else }}
+            - --role-base-arn-autodetect
+            {{- end }}
+            {{- if .Values.server.args.assumeRoleArn }}
+            - --assume-role-arn={{ .Values.server.args.assumeRoleArn }}
+            {{- end }}
+            {{- if .Values.server.args.prometheus.scrape }}
+            - --prometheus-listen-addr=0.0.0.0:{{ .Values.server.args.prometheus.port }}
+            - --prometheus-sync-interval={{ .Values.server.args.prometheus.syncInterval }}
+            {{- end }}
+          {{- range $key, $value := .Values.server.args.extraArgs }}
+            {{- if $value }}
+            - --{{ $key }}={{ $value }}
+            {{- else }}
+            - --{{ $key }}
+            {{- end }}
+          {{- end }}
+        {{- if .Values.server.extraEnv }}
+          env:
+          {{- range $name, $value := .Values.server.extraEnv }}
+            - name: {{ $name }}
+              value: {{ quote $value }}
+          {{- end }}
+        {{- end }}
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ssl-certs
+            - mountPath: /etc/kiam/tls
+              name: tls
+          livenessProbe:
+            exec:
+              command:
+              - /kiam
+              - health
+              - --cert=/etc/kiam/tls/{{ .Values.server.tlsCertNames.cert }}
+              - --key=/etc/kiam/tls/{{ .Values.server.tlsCertNames.key }}
+              - --ca=/etc/kiam/tls/{{ .Values.server.tlsCertNames.ca }}
+              - --server-address={{ .Values.server.probes.serverAddress }}:{{ .Values.server.service.targetPort }}
+              - --gateway-timeout-creation={{ .Values.server.args.gatewayTimeoutCreation }}
+              - --timeout=5s
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - /kiam
+              - health
+              - --cert=/etc/kiam/tls/{{ .Values.server.tlsCertNames.cert }}
+              - --key=/etc/kiam/tls/{{ .Values.server.tlsCertNames.key }}
+              - --ca=/etc/kiam/tls/{{ .Values.server.tlsCertNames.ca }}
+              - --server-address={{ .Values.server.probes.serverAddress }}:{{ .Values.server.service.targetPort }}
+              - --gateway-timeout-creation={{ .Values.server.args.gatewayTimeoutCreation }}
+              - --timeout=5s
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 10
+          resources:
+{{ toYaml .Values.server.resources | indent 12 }}
+      nodeSelector:
+{{ toYaml .Values.server.nodeSelector | indent 8 }}
+      affinity:
+{{ toYaml .Values.server.affinity | indent 8 }}
+      tolerations:
+{{ toYaml .Values.server.tolerations | indent 8 }}
+  updateStrategy:
+    type: {{ .Values.server.updateStrategy }}
