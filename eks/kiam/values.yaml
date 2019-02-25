@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: quay.io/uswitch/kiam
-  tag: v3-release
+  tag: v3.0
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -21,7 +21,7 @@ agent:
     ## host settings
     ##
     host:
-      iptables: false
+      iptables: true
       port: 8181
       interface: "!en0"
     ## log settings
@@ -42,13 +42,13 @@ agent:
 
   ## TLS settings
   ## Must specify tlsSecretName, tlsCertNames are the filenames
-  tlsSecretName:
+  tlsSecretName: "kiam-agent-tls"
   tlsCertNames:
     cert: agent.pem
     key: agent-key.pem
     ca: ca.pem
 
-  updateStrategy: OnDelete
+  updateStrategy: OnDelete # will only update the pods if you manually delete them
   extraEnv: {}
 
   podAnnotations: {}
@@ -91,7 +91,7 @@ server:
 
   ## TLS settings
   ## Must specify tlsSecretName, tlsCertNames are the filenames
-  tlsSecretName:
+  tlsSecretName: "kiam-server-tls"
   tlsCertNames:
     cert: server.pem
     key: server-key.pem
@@ -107,7 +107,7 @@ server:
     targetPort: 443
 
   
-  updateStrategy: OnDelete
+  updateStrategy: OnDelete # will only update the pods if you manually delete them
   extraEnv: {}
 
   podAnnotations: {}

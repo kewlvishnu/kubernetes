@@ -25,6 +25,8 @@ steps:
       from_secret: AWS_SECRET_ACCESS_KEY    
     FLUX_VAULT_PASSWORD:
       from_secret: FLUX_VAULT_PASSWORD 
+    KIAM_VAULT_PASSWORD:
+      from_secret: KIAM_VAULT_PASSWORD
   commands:
   - apt-get update
   - apt-get install unzip
@@ -78,8 +80,10 @@ steps:
   - ls /usr/local/bin/*
   - which kubectl
   - echo $FLUX_VAULT_PASSWORD > vault-password
+  - echo $KIAM_VAULT_PASSWORD > kiam-vault-password
   - cat vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
+  - ansible-playbook /drone/src/eks/secrets/devops/kiam/site.yml --vault-password-file=kiam-vault-password
   - # Add users to config map
   - # Single quotes for environment vars
   - terraform output config-map-aws-auth > config.yml
@@ -100,4 +104,5 @@ steps:
   - kubectl apply -f config.yml --kubeconfig /drone/src/eks/terraform/kubeconfig
   - kubectl apply -f ../tiller/serviceaccount.yml
   - helm init --service-account tiller --node-selectors=dedicated=eks-components --wait --override spec.template.spec.tolerations[0].key="node.kubernetes.io/unschedulable" --override spec.template.spec.tolerations[0].operator="Equal" --override spec.template.spec.tolerations[0].value="true" --override spec.template.spec.tolerations[0].effect="NoSchedule"
+  - helm install ../kiam -f ../kiam/values.yaml --name kiam
   - /bin/bash ../flux/flux.sh
