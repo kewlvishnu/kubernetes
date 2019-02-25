@@ -21,7 +21,7 @@ module "nodes" {
   iam-instance-profile = "${module.eks.node-iam-instance-profile}"
   node-security-groups = "${module.eks.node-security-groups}"
   private-subnet-ids = "${aws_subnet.eks-private-subnets.*.id}"
-  desired-capacity = 2
+  desired-capacity = 1
   min-size = 1
   max-size = 20
 }
