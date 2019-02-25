@@ -11,12 +11,12 @@ service:
 
 exporterType: "slack"
 slack:
-  URLSecretName:
-  URLSecretKey:
-  channel:
+  URLSecretName: fluxcloud-slack-webhook
+  URLSecretKey: webhook
+  channel: "#fluxcloud"
   username: ""
-  iconEmoji: ""
-  githubURL: ""
+  iconEmoji: ":kubernetes:"
+  githubURL: "https://github.com/Monotype/devops-kubernetes/"
 webhook:
   URL: 
 
