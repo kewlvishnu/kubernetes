@@ -107,4 +107,5 @@ steps:
   - helm init --service-account tiller --node-selectors=dedicated=eks-components --wait --override spec.template.spec.tolerations[0].key="node.kubernetes.io/unschedulable" --override spec.template.spec.tolerations[0].operator="Equal" --override spec.template.spec.tolerations[0].value="true" --override spec.template.spec.tolerations[0].effect="NoSchedule"
   - /bin/bash ../kiam/kiam.sh
   - /bin/bash ../flux/flux.sh
+  - kubectl -n devops logs deployment/flux | grep identity.pub | cut -d '"' -f2
   - /bin/bash ../fluxcloud/fluxcloud.sh

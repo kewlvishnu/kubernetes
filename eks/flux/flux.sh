@@ -5,7 +5,7 @@ if ! helm status flux; then
   helm install --wait --name flux \
     --namespace devops \
     -f ../flux/values-preprod.yaml \
-    --kubeconfig ../terraform/kubeconfig
+    --kubeconfig ../terraform/kubeconfig \
     weaveworks/flux
 fi
 # kubectl get customresourcedefinition
