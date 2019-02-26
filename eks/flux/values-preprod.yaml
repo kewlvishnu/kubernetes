@@ -8,9 +8,9 @@ helmOperator:
   nodeSelector:
     dedicated: eks-components
 git:
-  url: ssh://git@github.com/Monotype/devops-kubernetes
-  branch: flux-state
-  path: preprod/projects
+  url: ssh://git@github.com/kewlvishnu/kubernetes-flux
+  branch: master
+  path: staging/projects
   secretName: flux-git-deploy
   label: flux-sync-preprod
 additionalArgs:
