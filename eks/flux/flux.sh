@@ -1,9 +1,11 @@
 #!/bin/bash
 helm repo add weaveworks https://weaveworks.github.io/flux
+export AWS_DEFAULT_REGION=us-east-1
 if ! helm status flux; then
   helm install --wait --name flux \
     --namespace devops \
     -f ../flux/values-preprod.yaml \
+    --kubeconfig ../terraform/kubeconfig
     weaveworks/flux
 fi
 # kubectl get customresourcedefinition
