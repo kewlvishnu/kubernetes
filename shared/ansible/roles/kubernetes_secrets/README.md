@@ -7,8 +7,8 @@
     ---
     secrets:
       - metadata:
-          name: foundry-secrets
-          namespace: poc-foundry
+          name: project-secrets
+          namespace: wordpress
         data:
           "default.json": '
             {
