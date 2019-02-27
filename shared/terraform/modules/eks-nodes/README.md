@@ -44,7 +44,7 @@ module "nodes" {
   eks-cluster-cs = "${module.eks.eks-cluster-ca}"
   eks-name = "${module.eks.eks-name}"
   ec2-instance-type = "t2.medium"
-  keypair = "andrewm-devopsdev-fall"
+  keypair = "${var.key-name}"
   iam-instance-profile = "${module.eks.node-iam-instance-profile}"
   node-security-groups = "${module.eks.node-security-groups}"
   private-subnet-ids = "${aws_subnet.eks-private-subnets.*.id}"
