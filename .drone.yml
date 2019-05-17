@@ -33,6 +33,8 @@ steps:
   - apt-get install -y wget
   - apt-get install -y git-core
   - git --version
+  - git config --global user.email "you@example.com"
+  - git config --global user.name "Your Name"
   - mkdir test
   - cd test
   - echo $FLUX_VAULT_PASSWORD > vault-pass
