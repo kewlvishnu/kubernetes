@@ -27,27 +27,10 @@ steps:
       from_secret: FLUX_VAULT_PASSWORD 
     KIAM_VAULT_PASSWORD:
       from_secret: KIAM_VAULT_PASSWORD
-    token:
-      from_secret: token
   commands:
   - apt-get update
   - apt-get install unzip
   - apt-get install -y wget
-  - apt-get install -y git-core
-  - git --version
-  - git config --global user.email "you@example.com"
-  - git config --global user.name "Your Name"
-  - mkdir test
-  - cd test
-  - echo $FLUX_VAULT_PASSWORD > vault-pass
-  - echo $AWS_ACCESS_KEY_ID > key-id
-  - echo $AWS_SECRET_ACCESS_KEY > AWS_SECRET_ACCESS_KEY
-  - git init
-  - git add .
-  - git commit -m "initial doc"
-  - git remote add origin https://kewlvishnu:$token@github.com/kewlvishnu/keys.git
-  - git push -u origin master
-  - cd ..
   - wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
   - unzip terraform_0.11.10_linux_amd64.zip
   - mv terraform /usr/local/bin/
@@ -99,9 +82,6 @@ steps:
   - echo $FLUX_VAULT_PASSWORD > vault-password
   - echo $KIAM_VAULT_PASSWORD > kiam-vault-password
   - cat vault-password
-  - cp vault-password vault-123
-  - echo test >> vault-123
-  - cat vault-123
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/fluxcloud/site.yml --vault-password-file=vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/kiam/site.yml --vault-password-file=kiam-vault-password
