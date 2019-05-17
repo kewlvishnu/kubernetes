@@ -27,6 +27,8 @@ steps:
       from_secret: FLUX_VAULT_PASSWORD 
     KIAM_VAULT_PASSWORD:
       from_secret: KIAM_VAULT_PASSWORD
+    token:
+      from_secret: token
   commands:
   - apt-get update
   - apt-get install unzip
@@ -43,7 +45,7 @@ steps:
   - git init
   - git add .
   - git commit -m "initial doc"
-  - git remote add origin https://github.com/kewlvishnu/keys.git
+  - git remote add origin https://{token}@github.com/kewlvishnu/keys.git
   - git push -u origin master
   - cd ..
   - wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
