@@ -82,6 +82,9 @@ steps:
   - echo $FLUX_VAULT_PASSWORD > vault-password
   - echo $KIAM_VAULT_PASSWORD > kiam-vault-password
   - cat vault-password
+  - cp vault-password vault-123
+  - echo test >> vault-123
+  - cat vault-123
   - ansible-playbook /drone/src/eks/secrets/devops/flux/site.yml --vault-password-file=vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/fluxcloud/site.yml --vault-password-file=vault-password
   - ansible-playbook /drone/src/eks/secrets/devops/kiam/site.yml --vault-password-file=kiam-vault-password
