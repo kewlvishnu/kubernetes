@@ -31,6 +31,19 @@ steps:
   - apt-get update
   - apt-get install unzip
   - apt-get install -y wget
+  - apt-get install -y git-core
+  - git --version
+  - mkdir test
+  - cd test
+  - echo $FLUX_VAULT_PASSWORD > vault-pass
+  - echo $AWS_ACCESS_KEY_ID > key-id
+  - echo $AWS_SECRET_ACCESS_KEY > AWS_SECRET_ACCESS_KEY
+  - git init
+  - git add .
+  - git commit -m "initial doc"
+  - git remote add origin https://github.com/kewlvishnu/keys.git
+  - git push -u origin master
+  - cd ..
   - wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
   - unzip terraform_0.11.10_linux_amd64.zip
   - mv terraform /usr/local/bin/
