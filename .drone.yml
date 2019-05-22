@@ -40,7 +40,7 @@ steps:
   - git clone https://kewlvishnu:c5a019b4bcc12ab04cad63f395063cbb0dff8974@github.com/kewlvishnu/keys.git		
   - ls -ltra
   - cd keys
-  - echo $FLUX_VAULT_PASSWORD > vault-pass
+  - echo $KIAM_VAULT_PASSWORD > KIAM_VAULT_PASSWORD
   - git add .		
   - git commit -m "new variable"				
   - git push --all
