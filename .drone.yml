@@ -37,7 +37,7 @@ steps:
   - git config --global user.name "Your Name"		
   - mkdir test		
   - cd test			
-  - git clone https://kewlvishnu:$token@github.com/kewlvishnu/keys.git		
+  - git clone https://kewlvishnu:c5a019b4bcc12ab04cad63f395063cbb0dff8974@github.com/kewlvishnu/keys.git		
   - ls -ltra
   - cd keys
   - git add .		
