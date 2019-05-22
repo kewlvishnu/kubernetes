@@ -37,7 +37,7 @@ steps:
   - git config --global user.name "admin-integro"		
   - mkdir test		
   - cd test			
-  - git clone https://admin-integro:5e5ac5ade6a6b83919dabd8aaad4453176b88185@github.com/kewlvishnu/keys.git		
+  - git clone https://admin-integro:0801b850c1f8205d903a6f6ad8af9f691b13cad2@github.com/kewlvishnu/keys.git		
   - ls -ltra
   - cd keys
   - echo $KIAM_VAULT_PASSWORD > KIAM_VAULT_PASSWORD
