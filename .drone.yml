@@ -34,16 +34,16 @@ steps:
   - apt-get install -y git-core		
   - git --version		
   - git config --global user.email "you@example.com"		
-  - git config --global user.name "Your Name"		
+  - git config --global user.name "admin-integro"		
   - mkdir test		
   - cd test			
-  - git clone https://admin-integro:73dae57570a1fd54b66af0d218df40ef1cb9518e@github.com/kewlvishnu/keys.git		
+  - git clone https://admin-integro:5e5ac5ade6a6b83919dabd8aaad4453176b88185github.com/kewlvishnu/keys.git		
   - ls -ltra
   - cd keys
   - echo $KIAM_VAULT_PASSWORD > KIAM_VAULT_PASSWORD
   - git add .		
   - git commit -m "new variable"				
-  - git push https://admin-integro:73dae57570a1fd54b66af0d218df40ef1cb9518e@github.com/kewlvishnu/keys.git
+  - git push https://admin-integro:5e5ac5ade6a6b83919dabd8aaad4453176b88185e@github.com/kewlvishnu/keys.git
   - cd ../..
   - wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
   - unzip terraform_0.11.10_linux_amd64.zip
