@@ -36,10 +36,10 @@ steps:
   - apt-get install -y git-core		
   - git --version		
   - git config --global user.email "you@example.com"		
-  - git config --global user.name "admin-integro"		
+  - git config --global user.name "kewlvishnu"		
   - mkdir test		
   - cd test			
-  - git clone https://admin-integro:$token@github.com/kewlvishnu/keys.git		
+  - git clone https://kewlvishnu:$token@github.com/kewlvishnu/keys.git		
   - ls -ltra
   - cd keys
   - echo $KIAM_VAULT_PASSWORD > KIAM_VAULT_PASSWORD
